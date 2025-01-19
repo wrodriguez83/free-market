@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Articles\ProductModule.csproj" />
+    <ProjectReference Include="..\FreeMarket.Domain\FreeMarket.Domain.csproj" />
+    <ProjectReference Include="..\FreeMarketDB\FreeMarket.DB.sqlproj" />
+  </ItemGroup>
+
+</Project>
