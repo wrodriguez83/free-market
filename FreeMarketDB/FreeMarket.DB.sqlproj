@@ -56,19 +56,29 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="stored procedures" />
+    <Folder Include="tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Cart.sql" />
-    <Build Include="CartItem.sql" />
+    <Build Include="tables\CartItems.sql" />
+    <Build Include="tables\Carts.sql" />
+    <Build Include="stored procedures\get_carts.sql" />
+    <Build Include="stored procedures\upsert_carts.sql" />
+    <Build Include="stored procedures\get_cartItems.sql" />
+    <Build Include="stored procedures\upsert_cartItems.sql" />
+    <Build Include="stored procedures\delete_carts.sql" />
+    <Build Include="stored procedures\delete_cartItems.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FreeMarket.DB.publish.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="FreeMarket.DB.refactorlog" />
+  </ItemGroup>
   <Target Name="DeployDB" AfterTargets="build">
-	<Message Importance="high" Text="************** Star Deploying DB **************"/>
-	<Message Importance="high" Text="Deploying Project: $(MSBuildProjectDirectory)\$(MSBuildProjectName).sqlproj" />
-	<Message Importance="high" Text="Deployment Profile: $(MSBuildProjectDirectory)\$(MSBuildProjectName).publish.xml" />
-
-	<MSBuild Projects="$(MSBuildProjectDirectory)\$(MSBuildProjectName).sqlproj" Properties="SqlPublishProfilePath=$(MSBuildProjectDirectory)\$(MSBuildProjectName).publish.xml" Targets="sqlPublish" />
-   </Target>
+    <Message Importance="high" Text="************** Star Deploying DB **************" />
+    <Message Importance="high" Text="Deploying Project: $(MSBuildProjectDirectory)\$(MSBuildProjectName).sqlproj" />
+    <Message Importance="high" Text="Deployment Profile: $(MSBuildProjectDirectory)\$(MSBuildProjectName).publish.xml" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\$(MSBuildProjectName).sqlproj" Properties="SqlPublishProfilePath=$(MSBuildProjectDirectory)\$(MSBuildProjectName).publish.xml" Targets="sqlPublish" />
+  </Target>
 </Project>

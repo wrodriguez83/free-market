@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Articles\ProductModule.csproj" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FreeMarket.Domain\FreeMarket.Domain.csproj" />
-    <ProjectReference Include="..\SqlServerRepository\SqlServerRepository.csproj" />
   </ItemGroup>
 
 </Project>

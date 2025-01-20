@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Articles\ProductModule.csproj" />
+    <ProjectReference Include="..\CartModule\CartModule.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,14 +1,17 @@
-using FreeMarket.Domain.Interfaces;
+using CartModule.Application;
 using ProductModule.Application;
-using ProductModule.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSingleton<IService<Product>,ProductService>();
-builder.Services.AddControllers();
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IConfiguration>(provider=> new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true).Build());
 
+ProductServices.InjectServices(builder.Services);
+CartServices.InjectServices(builder.Services);
+
+builder.Services.AddControllers();
 var app = builder.Build();
 
 app.MapControllers();

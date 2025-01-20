@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 
 namespace CartModule.Application
 {
-    public class CartService(CartRepository repository) : IService<Cart>
+    public class CartItemService(CartItemRepository repository) : IService<CartItem>
     {
         public Task<ServiceResponse<object>> Delete(int id)
         {
@@ -26,52 +26,54 @@ namespace CartModule.Application
             }
         }
 
-        public async Task<ServiceResponse<Cart[]>> FindAll()
+        public async Task<ServiceResponse<CartItem[]>> FindAll()
         {
             try
             {
-                Cart[] data = await repository.GetAll();
-                return ServiceResponse<Cart[]>.Send(data);
+                CartItem[] data = await repository.GetAll();
+                return ServiceResponse<CartItem[]>.Send(data);
             }
             catch (SqlException ex)
             {
-                return ServiceResponse<Cart[]>.SendError(ex.Message, HttpStatusCode.BadGateway);
+                return ServiceResponse<CartItem[]>.SendError(ex.Message, HttpStatusCode.BadGateway);
             }
             catch (Exception)
             {
-                return ServiceResponse<Cart[]>.SendError();
+                return ServiceResponse<CartItem[]>.SendError();
             }
         }
-        public async Task<ServiceResponse<Cart>> FindOne(int id)
+
+        public async Task<ServiceResponse<CartItem>> FindOne(int id)
         {
             try
             {
-                Cart? data = await repository.GetOne(id);
-                return ServiceResponse<Cart>.Send(data);
+                CartItem? data = await repository.GetOne(id);
+                return ServiceResponse<CartItem>.Send(data);
             }
             catch (SqlException ex)
             {
-                return ServiceResponse<Cart>.SendError(ex.Message, HttpStatusCode.BadGateway);
+                return ServiceResponse<CartItem>.SendError(ex.Message, HttpStatusCode.BadGateway);
             }
             catch (Exception)
             {
-                return ServiceResponse<Cart>.SendError();
+                return ServiceResponse<CartItem>.SendError();
             }
         }
-        public async Task<ServiceResponse<Cart>> Upsert(Cart entity)
+
+        public async Task<ServiceResponse<CartItem>> Upsert(CartItem entity)
         {
             try
             {
-                await repository.Upsert(entity);
-                return ServiceResponse<Cart>.Send(entity);
+                CartItem? data = await repository.Upsert(entity);
+                return ServiceResponse<CartItem>.Send(data);
             }
             catch (SqlException ex)
             {
-                return ServiceResponse<Cart>.SendError(ex.Message, HttpStatusCode.BadGateway);
+                return ServiceResponse<CartItem>.SendError(ex.Message, HttpStatusCode.BadGateway);
             }
             catch (Exception)
             {
-                return ServiceResponse<Cart>.SendError();
+                return ServiceResponse<CartItem>.SendError();
             }
         }
     }

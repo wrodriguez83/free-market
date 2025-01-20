@@ -7,10 +7,8 @@ namespace FreeMarket.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController(ProductService service) : ControllerBase
     {
-        private readonly ProductService service = new();
-
         [HttpGet]
         public Task<ServiceResponse<Product[]>> Get()
         {

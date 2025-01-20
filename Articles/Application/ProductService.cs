@@ -5,9 +5,12 @@ using ProductModule.Infrastructure;
 
 namespace ProductModule.Application
 {
-    public class ProductService:IService<Product>
+    public class ProductService(ProductRepository repository):IService<Product>
     {
-        private readonly ProductRepository repository = new(new HttpClient());
+        public Task<ServiceResponse<object>> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<ServiceResponse<Product[]>> FindAll()
         {
@@ -35,12 +38,17 @@ namespace ProductModule.Application
             }
             catch (HttpRequestException ex)
             {
-                return ServiceResponse<Product[]>.SendError(ex.Message, ex.StatusCode);
+                return ServiceResponse<Product>.SendError(ex.Message, ex.StatusCode);
             }
             catch (Exception)
             {
-                return ServiceResponse<Product[]>.SendError();
+                return ServiceResponse<Product>.SendError();
             }
+        }
+
+        public Task<ServiceResponse<Product>> Upsert(Product entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
