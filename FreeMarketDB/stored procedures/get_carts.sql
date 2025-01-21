@@ -5,11 +5,7 @@ BEGIN
 	SELECT 
 		id, 
 		name, 
-		updated_at, 
-		CASE 
-            WHEN deleted_at IS NULL THEN 1 
-            ELSE 0 
-        END active
+		updated_at
 	FROM dbo.Carts
 	WHERE @id is null or id=@id
 	ORDER BY name

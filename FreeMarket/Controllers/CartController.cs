@@ -1,16 +1,17 @@
 ﻿using CartModule.Application;
 using CartModule.Domain;
 using FreeMarket.Domain.Classes;
+using FreeMarket.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FreeMarket.Controllers
 {
     [Route("api/carts")]
     [ApiController]
-    public class CartController(CartService service) : ControllerBase
+    public class CartController(IService<Cart> service) : ControllerBase
     {
         [HttpGet]
-        public Task<ServiceResponse<Cart[]>> Get()
+        public Task<ServiceResponse<List<Cart>>> Get()
         {
             return service.FindAll();
         }
@@ -20,7 +21,7 @@ namespace FreeMarket.Controllers
             return service.FindOne(id);
         }
         [HttpPost]
-        public Task<ServiceResponse<Cart>> Post([FromBody] Cart value)
+        public Task<ServiceResponse<Cart>> Upsert([FromBody] Cart value)
         {
             return service.Upsert(value);
         }

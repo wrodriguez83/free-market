@@ -5,9 +5,9 @@ AS
 BEGIN
 	BEGIN TRY
 		IF @id is null BEGIN
-			INSERT INTO dbo.carts (name) values (@name)
+			INSERT INTO dbo.Carts (name) values (@name)
 		END ELSE BEGIN
-			UPDATE dbo.carts SET name=@name, updated_at = GETDATE() WHERE id=@id
+			UPDATE dbo.Carts SET name=@name, updated_at = GETDATE() WHERE id=@id
 		END
 	END TRY
 	BEGIN CATCH

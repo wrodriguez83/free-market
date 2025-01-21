@@ -1,31 +1,25 @@
 ﻿using FreeMarket.Domain.Classes;
 using FreeMarket.Domain.Interfaces;
 using ProductModule.Domain;
-using ProductModule.Infrastructure;
 
 namespace ProductModule.Application
 {
-    public class ProductService(ProductRepository repository):IService<Product>
+    public class ProductService(IModuleRepository<Product> repository) : IService<Product>
     {
-        public Task<ServiceResponse<object>> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ServiceResponse<Product[]>> FindAll()
+        public async Task<ServiceResponse<List<Product>>> FindAll()
         {
             try
             {
-                Product[] data = await repository.GetAll();
-                return ServiceResponse<Product[]>.Send(data);
+                List<Product> data = await repository.GetAll();
+                return ServiceResponse<List<Product>>.Send(data);
             }
             catch (HttpRequestException ex)
             {
-                return ServiceResponse<Product[]>.SendError(ex.Message,ex.StatusCode);
+                return ServiceResponse<List<Product>>.SendError(ex.Message, ex.StatusCode);
             }
             catch (Exception)
             {
-                return ServiceResponse<Product[]>.SendError();
+                return ServiceResponse<List<Product>>.SendError();
             }
         }
 
@@ -47,6 +41,10 @@ namespace ProductModule.Application
         }
 
         public Task<ServiceResponse<Product>> Upsert(Product entity)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<ServiceResponse<object>> Delete(int id)
         {
             throw new NotImplementedException();
         }

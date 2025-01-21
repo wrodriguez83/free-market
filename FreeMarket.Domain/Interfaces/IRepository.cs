@@ -2,9 +2,10 @@
 {
     public interface IRepository<T>
     {
-        public Task<T[]> GetAll();
-        public Task<T?> GetOne(int id);
-        public Task<T> Upsert(T entity);
-        public void Delete(int id);
+        public Task<List<T>> GetAll(string entityName);
+        public Task<List<T>> GetAllBy(string entityName, int id);
+        public Task<T?> GetOne(string entityName, int id);
+        public Task<T?> Upsert(string entityName, T entity);
+        public void Delete(string entityName, int id);
     }
 }

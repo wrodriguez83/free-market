@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Articles\ProductModule.csproj" />
     <ProjectReference Include="..\CartModule\CartModule.csproj" />
+    <ProjectReference Include="..\ProductModule\ProductModule.csproj" />
   </ItemGroup>
 
 </Project>

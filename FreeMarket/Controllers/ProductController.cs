@@ -1,16 +1,16 @@
 ﻿using FreeMarket.Domain.Classes;
+using FreeMarket.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using ProductModule.Application;
 using ProductModule.Domain;
 
 namespace FreeMarket.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController(ProductService service) : ControllerBase
+    public class ProductController(IService<Product> service) : ControllerBase
     {
         [HttpGet]
-        public Task<ServiceResponse<Product[]>> Get()
+        public Task<ServiceResponse<List<Product>>> Get()
         {
             return service.FindAll();
         }
@@ -20,23 +20,5 @@ namespace FreeMarket.Controllers
         {
             return service.FindOne(id);
         }
-
-        //// POST api/<TestController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT api/<TestController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<TestController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

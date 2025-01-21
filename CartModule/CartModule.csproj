@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Articles\ProductModule.csproj" />
     <ProjectReference Include="..\FreeMarket.Domain\FreeMarket.Domain.csproj" />
+    <ProjectReference Include="..\ProductModule\ProductModule.csproj" />
     <ProjectReference Include="..\SqlServerRepository\SqlServerRepository.csproj" />
   </ItemGroup>
 

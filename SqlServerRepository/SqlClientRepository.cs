@@ -8,48 +8,60 @@ namespace SqlServerRepository
     public abstract class SqlClientRepository<T>(IConfiguration configuration) : IRepository<T>
     {
         private readonly SqlConnection connection = new(configuration.GetConnectionString("db"));
-        protected virtual string Entity { get { return ""; } }
-        public async Task<T[]> GetAll()
+        public async Task<List<T>> GetAll(string entityName)
         {
-            SqlCommand command = new($"get_{Entity}", connection);
+            SqlCommand command = CreateCommand($"get_{entityName}");
             DataTable table = RunQuery(command);
 
             return await Task.FromResult(await Parse(table.Rows)).ConfigureAwait(false);
         }
-        public async Task<T?> GetOne(int id)
+        public async Task<T?> GetOne(string entityName, int id)
         {
-            SqlCommand command = new($"get_{Entity}", connection);
+            SqlCommand command = CreateCommand($"get_{entityName}");
             ParseGetParameters(id, command);
             DataTable table = RunQuery(command);
 
             return await Task.FromResult((await Parse(table.Rows)).FirstOrDefault()).ConfigureAwait(false);
         }
-        public async Task<T> Upsert(T entity)
+        public async Task<T?> Upsert(string entityName, T entity)
         {
             PreUpsert(entity);
-            SqlCommand command = new($"upsert_{Entity}", connection);
+            SqlCommand command = CreateCommand($"upsert_{entityName}");
             ParseUpsertParameters(entity, command);
-            DataTable table = RunQuery(command);
+            RunQuery(command);
 
             return await Task.FromResult(entity).ConfigureAwait(false);
         }
-        public void Delete(int id)
+        public void Delete(string entityName, int id)
         {
-            SqlCommand command = new($"delete_{Entity}", connection);
+            SqlCommand command = CreateCommand($"delete_{entityName}");
             ParseDeleteParameters(id, command);
-            DataTable table = RunQuery(command);
+            RunQuery(command);
         }
-        private DataTable RunQuery(SqlCommand command)
+        protected virtual DataTable RunQuery(SqlCommand command)
         {
-            DataTable table = new DataTable();
+            DataTable table = new();
             SqlDataAdapter adapter = new(command);
             adapter.Fill(table);
 
             return table;
         }
 
+        public async Task<List<T>> GetAllBy(string entityName, int id)
+        {
+            SqlCommand command = CreateCommand($"get_{entityName}");
+            ParseGetParameters(id, command);
+            DataTable table = RunQuery(command);
+            return await Task.FromResult(await Parse(table.Rows)).ConfigureAwait(false);
+        }
+
+        protected virtual SqlCommand CreateCommand(string cmdText)
+        {
+            return new SqlCommand(cmdText, connection);
+        }
+
         protected virtual void PreUpsert(T entity) { }
-        protected abstract Task<T[]> Parse(DataRowCollection rows);
+        protected abstract Task<List<T>> Parse(DataRowCollection rows);
         protected abstract void ParseGetParameters(int id, SqlCommand command);
         protected abstract void ParseUpsertParameters(T entity, SqlCommand command);
         protected abstract void ParseDeleteParameters(int id, SqlCommand command);

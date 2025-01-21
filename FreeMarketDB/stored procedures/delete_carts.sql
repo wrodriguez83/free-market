@@ -3,7 +3,7 @@
 AS
 BEGIN
 	BEGIN TRY
-		UPDATE dbo.Carts set deleted_at = GETDATE() WHERE id=@id
+		DELETE FROM dbo.Carts WHERE id=@id
 	END TRY
 	BEGIN CATCH
 		ROLLBACK

@@ -1,13 +1,12 @@
 ﻿using System.Net;
 using CartModule.Domain;
-using CartModule.Infrastructure;
 using FreeMarket.Domain.Classes;
 using FreeMarket.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace CartModule.Application
 {
-    public class CartService(CartRepository repository) : IService<Cart>
+    public class CartService(IModuleRepository<Cart> repository) : IService<Cart>
     {
         public Task<ServiceResponse<object>> Delete(int id)
         {
@@ -26,20 +25,20 @@ namespace CartModule.Application
             }
         }
 
-        public async Task<ServiceResponse<Cart[]>> FindAll()
+        public async Task<ServiceResponse<List<Cart>>> FindAll()
         {
             try
             {
-                Cart[] data = await repository.GetAll();
-                return ServiceResponse<Cart[]>.Send(data);
+                List<Cart> data = await repository.GetAll();
+                return ServiceResponse<List<Cart>>.Send(data);
             }
             catch (SqlException ex)
             {
-                return ServiceResponse<Cart[]>.SendError(ex.Message, HttpStatusCode.BadGateway);
+                return ServiceResponse<List<Cart>>.SendError(ex.Message, HttpStatusCode.BadGateway);
             }
             catch (Exception)
             {
-                return ServiceResponse<Cart[]>.SendError();
+                return ServiceResponse<List<Cart>>.SendError();
             }
         }
         public async Task<ServiceResponse<Cart>> FindOne(int id)
