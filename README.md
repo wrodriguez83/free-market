@@ -10,7 +10,7 @@ Esta aplicación fué creada con **.Net 9.0** y hace uso de las siguientes tecno
 * Tener acceso a una instancia de SqlServer y configurarla en el archivo `appsettings.json` y en `FreeMarket.DB.publish.xml`
 
 ## Instrucciones
-* Recompilar la solución (Esto impactará el modelo de datos a la instancia de SqlServer
+* Recompilar la solución (Esto impactará el modelo de datos a la instancia de SqlServer)
 * Asegurarse que el proyecto FreeMarket sea el proyecto de inicio
 * Ejecutar
 
