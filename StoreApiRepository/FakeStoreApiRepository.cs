@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace StoreApiRepository
 {
-    public abstract class FakeStoreApiRepository<T>(HttpClient httpClient, IConfiguration configuration) : IRepository<T>
+    public class FakeStoreApiRepository<T>(HttpClient httpClient, IConfiguration configuration) : IRepository<T>
     {
         private readonly string? ApiURL = configuration.GetConnectionString("storeApi");
         public async Task<List<T>> GetAll(string entityName)

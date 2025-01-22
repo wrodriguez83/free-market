@@ -1,6 +1,8 @@
-﻿namespace ProductModule.Domain
+﻿using FreeMarket.Domain.Interfaces;
+
+namespace ProductModule.Domain
 {
-    public class Product
+    public class Product:IEntity
     {
         public int Id { get; set; }
         public required string Title { get; set; }

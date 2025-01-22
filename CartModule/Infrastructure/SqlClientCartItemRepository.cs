@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.Globalization;
+using System.Xml.Serialization;
 using CartModule.Domain;
 using FreeMarket.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
@@ -12,7 +14,7 @@ namespace CartModule.Infrastructure
     {
         protected override async Task<List<CartItem>> Parse(DataRowCollection rows)
         {
-            List<CartItem> currentCartItems = new();
+            List<CartItem> currentCartItems = [];
 
             foreach (DataRow row in rows)
             {
@@ -20,7 +22,7 @@ namespace CartModule.Infrastructure
                 int cartId = row.Field<int>("cartId");
                 int productId = row.Field<int>("productId");
                 int quantity = row.Field<int>("quantity");
-                double price = row.Field<double>("price");
+                double price = (double)row.Field<decimal>("price");
                 DateTime updated_at = row.Field<DateTime>("updated_at");
                 Product? product = (await productService.FindOne(productId)).Data;
 
@@ -34,15 +36,25 @@ namespace CartModule.Infrastructure
 
         protected override void ParseDeleteParameters(int id, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@cartId", id);
+            if (id > 0)
+            {
+                command.Parameters.AddWithValue("@cartId", id);
+            }
         }
         protected override void ParseGetParameters(int id, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@cartId", id);
+            if (id > 0)
+            {
+                command.Parameters.AddWithValue("@cartId", id);
+            }
         }
         protected override void ParseUpsertParameters(CartItem entity, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@id", entity.Id);
+            if (entity.Id > 0)
+            {
+                command.Parameters.AddWithValue("@id", entity.Id);
+            }
+
             command.Parameters.AddWithValue("@productId", entity.Product?.Id);
             command.Parameters.AddWithValue("@quantity", entity.Quantity);
             command.Parameters.AddWithValue("@price", entity.Price);

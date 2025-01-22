@@ -7,7 +7,7 @@ namespace TestHelper
     {
         public static Cart NewCart(bool? linkItems = false)
         {
-            return new Cart { Id = new Random().Next(1, 100), Name = "Test", LastUpdate = DateTime.Now, Products = linkItems ?? false ? [NewCartItem(), NewCartItem()] : [] };
+            return new Cart { Id = new Random().Next(1, 100), Name = "Test", LastUpdate = DateTime.Now, Items = linkItems ?? false ? [NewCartItem(), NewCartItem()] : [] };
         }
         public static CartItem NewCartItem()
         {

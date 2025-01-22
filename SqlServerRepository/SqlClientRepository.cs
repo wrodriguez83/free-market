@@ -5,62 +5,93 @@ using Microsoft.Extensions.Configuration;
 
 namespace SqlServerRepository
 {
-    public abstract class SqlClientRepository<T>(IConfiguration configuration) : IRepository<T>
+    public abstract class SqlClientRepository<T>(IConfiguration configuration) : IRepository<T> where T:IEntity
     {
         private readonly SqlConnection connection = new(configuration.GetConnectionString("db"));
         public async Task<List<T>> GetAll(string entityName)
         {
             SqlCommand command = CreateCommand($"get_{entityName}");
-            DataTable table = RunQuery(command);
+            DataTable table = ExecuteGet(command);
 
+            return await Task.FromResult(await Parse(table.Rows)).ConfigureAwait(false);
+        }
+        public async Task<List<T>> GetAllBy(string entityName, int id)
+        {
+            SqlCommand command = CreateCommand($"get_{entityName}");
+            ParseGetParameters(id, command);
+            DataTable table = ExecuteGet(command);
             return await Task.FromResult(await Parse(table.Rows)).ConfigureAwait(false);
         }
         public async Task<T?> GetOne(string entityName, int id)
         {
             SqlCommand command = CreateCommand($"get_{entityName}");
             ParseGetParameters(id, command);
-            DataTable table = RunQuery(command);
+            DataTable table = ExecuteGet(command);
 
             return await Task.FromResult((await Parse(table.Rows)).FirstOrDefault()).ConfigureAwait(false);
         }
         public async Task<T?> Upsert(string entityName, T entity)
         {
-            PreUpsert(entity);
             SqlCommand command = CreateCommand($"upsert_{entityName}");
             ParseUpsertParameters(entity, command);
-            RunQuery(command);
-
+            int id = ExecuteUpsert(command);
+            entity.Id = id;
             return await Task.FromResult(entity).ConfigureAwait(false);
         }
         public void Delete(string entityName, int id)
         {
             SqlCommand command = CreateCommand($"delete_{entityName}");
             ParseDeleteParameters(id, command);
-            RunQuery(command);
+            ExecuteDelete(command);
         }
-        protected virtual DataTable RunQuery(SqlCommand command)
+        protected virtual DataTable ExecuteGet(SqlCommand command)
         {
-            DataTable table = new();
-            SqlDataAdapter adapter = new(command);
-            adapter.Fill(table);
+            try
+            {
+                DataTable table = new();
+                SqlDataAdapter adapter = new(command);
+                adapter.Fill(table);
 
-            return table;
+                return table;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
-
-        public async Task<List<T>> GetAllBy(string entityName, int id)
+        protected virtual int ExecuteUpsert(SqlCommand command)
         {
-            SqlCommand command = CreateCommand($"get_{entityName}");
-            ParseGetParameters(id, command);
-            DataTable table = RunQuery(command);
-            return await Task.FromResult(await Parse(table.Rows)).ConfigureAwait(false);
+            try
+            {
+                connection.Open();
+                int id = (int)command.ExecuteScalar();
+                return id;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
+        protected virtual void ExecuteDelete(SqlCommand command)
+        {
+            try
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
         protected virtual SqlCommand CreateCommand(string cmdText)
         {
-            return new SqlCommand(cmdText, connection);
+            return new SqlCommand(cmdText, connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
         }
-
-        protected virtual void PreUpsert(T entity) { }
         protected abstract Task<List<T>> Parse(DataRowCollection rows);
         protected abstract void ParseGetParameters(int id, SqlCommand command);
         protected abstract void ParseUpsertParameters(T entity, SqlCommand command);

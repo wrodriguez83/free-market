@@ -1,8 +1,9 @@
-﻿using ProductModule.Domain;
+﻿using FreeMarket.Domain.Interfaces;
+using ProductModule.Domain;
 
 namespace CartModule.Domain
 {
-    public class CartItem
+    public class CartItem:IEntity
     {
         public int Id { get; set; }
         public double Price { get; set; }

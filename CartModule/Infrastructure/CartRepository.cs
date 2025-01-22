@@ -19,7 +19,7 @@ namespace CartModule.Infrastructure
             foreach (Cart cart in carts)
             {
                 List<CartItem> itemsOfCart = items.FindAll(x => x.Id == cart.Id);
-                cart.Products = itemsOfCart;
+                cart.Items = itemsOfCart;
             }
 
             return carts;
@@ -33,7 +33,7 @@ namespace CartModule.Infrastructure
             foreach (Cart cart in carts)
             {
                 List<CartItem> itemsOfCart = items.FindAll(x => x.Id == cart.Id);
-                cart.Products = itemsOfCart;
+                cart.Items = itemsOfCart;
             }
 
             return carts;
@@ -46,7 +46,7 @@ namespace CartModule.Infrastructure
             if (cart != null)
             {
                 List<CartItem> items = await cardItemRepository.GetAllBy(id);
-                cart.Products = items;
+                cart.Items = items;
             }
 
             return cart;
@@ -55,11 +55,14 @@ namespace CartModule.Infrastructure
         public async Task<Cart?> Upsert(Cart entity)
         {
             cardItemRepository.Delete(entity.Id);
-            foreach (CartItem cartItem in entity.Products)
+            await repository.Upsert("carts", entity);
+
+            foreach (CartItem cartItem in entity.Items)
             {
+                cartItem.CartId = entity.Id;
                 await cardItemRepository.Upsert(cartItem);
             }
-            await repository.Upsert("carts", entity);
+            
             return await GetOne(entity.Id);
         }
     }

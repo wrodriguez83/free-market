@@ -36,7 +36,7 @@ namespace CartModuleTests
 
             dto.ForEach(cart =>
             {
-                cart.Products = items;
+                cart.Items = items;
                 cart.IsDeepEqual(result.Find(x => x.Id == cart.Id));
             });
 
@@ -60,7 +60,7 @@ namespace CartModuleTests
 
             dto.ForEach(cart =>
             {
-                cart.Products = items;
+                cart.Items = items;
                 cart.IsDeepEqual(result.Find(x => x.Id == cart.Id));
             });
 
@@ -82,7 +82,7 @@ namespace CartModuleTests
             var result = await repository.GetOne(dto.Id);
             Assert.IsNotNull(result);
 
-            dto.Products = items;
+            dto.Items = items;
 
             dto.IsDeepEqual(result);
             mockRepository?.VerifyAll();
@@ -94,7 +94,7 @@ namespace CartModuleTests
         {
             Cart dto = Factories.NewCart();
             List<CartItem> items = [Factories.NewCartItem(), Factories.NewCartItem()];
-            dto.Products = items;
+            dto.Items = items;
 
             mockRepository.Setup(x => x.Upsert("carts", dto)).ReturnsAsync(dto);
             mockRepository.Setup(x => x.GetOne("carts", dto.Id)).ReturnsAsync(dto);
@@ -117,7 +117,7 @@ namespace CartModuleTests
         {
             Cart dto = Factories.NewCart();
             List<CartItem> items = [Factories.NewCartItem(), Factories.NewCartItem()];
-            dto.Products = items;
+            dto.Items = items;
 
             mockRepository.Setup(x => x.Delete("carts", dto.Id));
             mockCartItemRepository.Setup(x => x.Delete(dto.Id));

@@ -18,7 +18,7 @@ namespace CartModule.Infrastructure
                 string cartName = row.Field<string>("name") ?? "";
                 DateTime updated_at = row.Field<DateTime>("updated_at");
 
-                Cart cart = new() { Id = id, Name = cartName, Products = [], LastUpdate = updated_at };
+                Cart cart = new() { Id = id, Name = cartName, Items = [], LastUpdate = updated_at };
                 currentCarts.Add(cart);
             }
 
@@ -27,15 +27,25 @@ namespace CartModule.Infrastructure
 
         protected override void ParseDeleteParameters(int id, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@id", id);
+            if (id > 0)
+            {
+                command.Parameters.AddWithValue("@id", id);
+            }
         }
         protected override void ParseGetParameters(int id, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@id", id);
+            if (id > 0)
+            {
+                command.Parameters.AddWithValue("@id", id);
+            }
         }
         protected override void ParseUpsertParameters(Cart entity, SqlCommand command)
         {
-            command.Parameters.AddWithValue("@id", entity.Id);
+            if (entity.Id > 0)
+            {
+                command.Parameters.AddWithValue("@id", entity.Id);
+            }
+
             command.Parameters.AddWithValue("@name", entity.Name);
         }
     }

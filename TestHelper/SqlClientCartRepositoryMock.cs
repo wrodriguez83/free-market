@@ -10,12 +10,26 @@ namespace TestHelper
     {
         public static List<Cart> Data = new();
         public SqlCommand? SqlCommand;
-        protected override DataTable RunQuery(SqlCommand command)
+        protected override DataTable ExecuteGet(SqlCommand command)
         {
             DataTable dt = new DataTable();
 
             DtoToDataRow(dt);
             return dt;
+        }
+        protected override int ExecuteUpsert(SqlCommand command)
+        {
+            if (Data[0].Id == 0)
+            {
+                return new Random().Next(1, 100);
+            }
+
+            return Data[0].Id;
+        }
+
+        protected override void ExecuteDelete(SqlCommand command)
+        {
+
         }
 
         protected override SqlCommand CreateCommand(string cmdText)
